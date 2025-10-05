@@ -105,44 +105,43 @@ const VideoUploader = memo(() => {
     }
   };
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white">
-      <div className="w-full max-w-4xl px-4 space-y-12">
-        <div className="space-y-6 text-center">
-          <h1 className="text-5xl font-extrabold tracking-tighter sm:text-6xl md:text-7xl bg-clip-text text-transparent bg-gradient-to-r from-white to-zinc-500">
-            Open Source Video Editor
-          </h1>
-          <p className="text-xl text-zinc-400 max-w-2xl mx-auto">
-            Unleash your creativity with our powerful, free, and open-source video editing platform.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4 pt-4">
-            <a className="w-full" href="https://github.com/Govind783/nextjs-video-editor" target="_blank">
-              <Button variant="outline" className="border-zinc-700 hover:bg-zinc-900">
-                <Code className="w-4 h-4 mr-2" />
-                View on GitHub
-              </Button>
-            </a>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-retro-cream">
+      <div className="w-full max-w-4xl px-4">
+        <div className="bg-white border-8 border-retro-navy rounded-3xl shadow-[12px_12px_0px_0px_rgba(27,58,87,1)] p-12 space-y-12">
+          <div className="space-y-6 text-center">
+            <h1 className="text-5xl font-black tracking-tight sm:text-6xl md:text-7xl text-retro-navy uppercase" style={{ textShadow: '4px 4px 0px rgba(255,107,107,0.3)' }}>
+              Open Source Video Editor
+            </h1>
+            <p className="text-xl text-retro-navy/80 max-w-2xl mx-auto font-bold">
+              Unleash your creativity with our powerful, free, and open-source video editing platform.
+            </p>
+            <div className="flex flex-wrap justify-center gap-4 pt-4">
+              <a className="w-full max-w-md" href="https://github.com/Govind783/nextjs-video-editor" target="_blank">
+                <Button variant="secondary" className="w-full">
+                  <Code className="w-5 h-5 mr-2" />
+                  View on GitHub
+                </Button>
+              </a>
+            </div>
           </div>
-        </div>
-        <div className=" gap-6 max-w-2xl w-full mx-auto">
-          <div onClick={() => fileInputRef.current.click()} className="space-y-4 w-full">
-            <input type="file" accept="video/*" className="hidden" ref={fileInputRef} onChange={handleUpload} />
-            <Button
-              variant="outline"
-              className="w-full h-48 border-dashed border-2 border-zinc-800 bg-zinc-950 hover:!bg-gray-900 hover:border-zinc-700 transition-all duration-300 rounded-lg flex flex-col items-center justify-center space-y-2"
-            >
-              <Upload className="!w-8 !h-8" />
-              <span className="font-medium">Upload Your Video</span>
+          <div className="gap-6 max-w-2xl w-full mx-auto">
+            <div onClick={() => fileInputRef.current.click()} className="space-y-4 w-full">
+              <input type="file" accept="video/*" className="hidden" ref={fileInputRef} onChange={handleUpload} />
+              <div className="w-full h-56 border-8 border-dashed border-retro-navy bg-retro-cream-dark hover:bg-retro-cream transition-all duration-300 rounded-2xl flex flex-col items-center justify-center space-y-4 cursor-pointer shadow-[6px_6px_0px_0px_rgba(27,58,87,1)] hover:shadow-[8px_8px_0px_0px_rgba(27,58,87,1)] hover:translate-y-[-2px]">
+                <Upload className="w-16 h-16 text-retro-navy" />
+                <span className="font-bold text-xl text-retro-navy">Upload Your Video</span>
+              </div>
+            </div>
+            <div className="flex items-center gap-4 mt-8">
+              <div className="bg-retro-navy h-1 w-1/2 rounded-full"></div>
+              <p className="font-black text-retro-navy text-xl">OR</p>
+              <div className="bg-retro-navy h-1 w-1/2 rounded-full"></div>
+            </div>
+
+            <Button onClick={handleDemoPreview} disabled={isLoadingForDemoVideo} className="mt-8 w-full text-lg">
+              Try with Demo Video {isLoadingForDemoVideo && <Loader />}
             </Button>
           </div>
-          <div className="flex items-center gap-2 mt-5">
-            <div className="bg-gray-700 w-1/2 h-[1px]"></div>
-            <p>OR</p>
-            <div className="bg-gray-700 w-1/2 h-[1px]"></div>
-          </div>
-
-          <Button onClick={handleDemoPreview} disabled={isLoadingForDemoVideo} className="mt-4 w-full">
-            Try with Demo Video {isLoadingForDemoVideo && <Loader />}
-          </Button>
         </div>
       </div>
     </div>

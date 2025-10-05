@@ -193,16 +193,16 @@ const VideoEditor = () => {
   }, [videos]);
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full bg-retro-cream">
       {videos.length > 0 ? (
         <>
           <LeftPanel />
           <RightPanel openMenu={openMenu} setOpenMenu={setOpenMenu} />
-          <div className="w-full h-full" ref={containerRef}>
-            <div className="w-full h-full bg-gray-950">
+          <div className="w-full h-full p-6" ref={containerRef}>
+            <div className="w-full h-full bg-white border-8 border-retro-navy rounded-3xl shadow-[12px_12px_0px_0px_rgba(27,58,87,1)] overflow-hidden">
               <Viewer
                 ref={viewerRef}
-                className="player-container h-[650px] bg-scene"
+                className="player-container h-[650px] bg-retro-cream-dark"
                 displayHorizontalScroll={false}
                 displayVerticalScroll={false}
                 zoom={1}

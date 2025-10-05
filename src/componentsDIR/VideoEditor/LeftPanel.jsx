@@ -198,9 +198,9 @@ const LeftPanel = memo(() => {
     }
   };
   return (
-    <div className="fixed bg-black left-4 z-[4] top-[37%] transform -translate-y-1/2" ref={menuRef}>
+    <div className="fixed left-8 z-[4] top-[37%] transform -translate-y-1/2" ref={menuRef}>
       <TooltipProvider>
-        <div className="bg-background rounded-lg shadow-lg flex flex-col space-y-1 p-2">
+        <div className="bg-white border-6 border-retro-navy rounded-2xl shadow-[6px_6px_0px_0px_rgba(27,58,87,1)] flex flex-col space-y-2 p-3">
           <MenuButton icon={<Video className="h-5 w-5" />} tooltip="Upload Video" onClick={() => toggleMenu("video")} />
           <MenuButton icon={<Type className="h-5 w-5" />} tooltip="Add Text" onClick={() => toggleMenu("text")} />
           <MenuButton icon={<Image className="h-5 w-5" />} tooltip="Upload Photo" onClick={() => toggleMenu("photo")} />
@@ -482,11 +482,11 @@ function MenuButton({ icon, tooltip, onClick }) {
   return (
     <Tooltip delayDuration={0}>
       <TooltipTrigger asChild>
-        <Button variant="ghost" size="icon" className="rounded-md hover:bg-accent" onClick={onClick}>
+        <Button variant="ghost" size="icon" className="rounded-xl hover:bg-retro-cream-dark text-retro-navy border-0 shadow-none" onClick={onClick}>
           {icon}
         </Button>
       </TooltipTrigger>
-      <TooltipContent side="right">
+      <TooltipContent side="right" className="bg-retro-navy text-white border-4 border-retro-navy-dark font-bold">
         <p>{tooltip}</p>
       </TooltipContent>
     </Tooltip>
@@ -495,7 +495,7 @@ function MenuButton({ icon, tooltip, onClick }) {
 
 function MenuContent({ children }) {
   return (
-    <div className="absolute bg-black left-full ml-7 top-0 w-72 bg-background border border-gray-500 rounded-lg shadow-lg p-4 transition-all ease-out duration-300 transform translate-y-0 opacity-100 animate-slide-up">
+    <div className="absolute bg-white left-full ml-7 top-0 w-72 border-6 border-retro-navy rounded-2xl shadow-[8px_8px_0px_0px_rgba(27,58,87,1)] p-5 transition-all ease-out duration-300 transform translate-y-0 opacity-100 animate-slide-up">
       {children}
     </div>
   );

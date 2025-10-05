@@ -172,7 +172,7 @@ const RightPanel = memo(() => {
   return (
     <div className="">
       <Sheet open={isTextDrawerOpen || isVideoDrawerOpen || isImagesDrawerOpen} modal={false}>
-        <SheetTrigger className="fixed left-4 z-10 top-4 flex flex-col gap-4">
+        <SheetTrigger className="fixed left-8 z-10 top-8 flex flex-col gap-4">
           {selectedVideoId && (
             <div className="">
               <MenuButton icon={<Video className="h-6 w-6" />} onClick={handleVideoClick} tooltip={"Video Settings"} />
@@ -199,27 +199,27 @@ const RightPanel = memo(() => {
             />
           )}
         </SheetTrigger>
-        <SheetContent onClick={preventDrawerClose} className="h-[94vh] noScrollbar overflow-y-auto !p-[1.2rem] sm:max-w-[31rem] border-l-gray-600">
+        <SheetContent onClick={preventDrawerClose} className="h-[94vh] noScrollbar overflow-y-auto !p-[1.2rem] sm:max-w-[31rem] border-l-8 border-l-retro-navy bg-white">
           <SheetHeader>
             <SheetTitle></SheetTitle>
-            <SheetDescription className="">
+            <SheetDescription className="text-retro-navy">
               {selectedVideoId && (
                 <>
-                  <p className="text-xl font-bold">Video Settings</p>
+                  <p className="text-2xl font-black text-retro-navy">Video Settings</p>
                   {/* <div>Adjust video playback settings here.</div> */}
                   <div className=" pb-0 mt-5">
                     <div className="space-y-10">
                       <div>
-                        <h4 className="text-lg font-medium mb-4">Playback Speed</h4>
+                        <h4 className="text-lg font-bold text-retro-navy mb-4">Playback Speed</h4>
                         <div className="flex flex-wrap gap-3">
                           {[0.5, 0.75, 1, 1.25, 1.5, 1.75, 2].map((speed) => (
                             <button
                               key={speed}
                               onClick={() => handleSpeedChange(speed)}
-                              className={`px-4 py-2 border border-gray-700 text-sm font-medium rounded-full transition-colors ${
+                              className={`px-5 py-2.5 border-4 text-sm font-bold rounded-2xl transition-all shadow-[3px_3px_0px_0px_rgba(27,58,87,1)] hover:shadow-[5px_5px_0px_0px_rgba(27,58,87,1)] hover:translate-y-[-2px] ${
                                 speed === selectedVideo.speed
-                                  ? "bg-white text-black"
-                                  : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                                  ? "bg-retro-coral text-white border-retro-navy"
+                                  : "bg-retro-cream text-retro-navy border-retro-navy hover:bg-retro-cream-dark"
                               }`}
                             >
                               {speed}x
@@ -228,9 +228,9 @@ const RightPanel = memo(() => {
                         </div>
                       </div>
                       <div>
-                        <h4 className="text-lg font-medium mb-4">Volume</h4>
+                        <h4 className="text-lg font-bold text-retro-navy mb-4">Volume</h4>
                         <div className="flex items-center space-x-6">
-                          <Volume2 className="h-6 w-6 text-muted-foreground" />
+                          <Volume2 className="h-6 w-6 text-retro-navy" />
                           <Slider
                             value={[selectedVideo.volume]}
                             onValueChange={handleVolumeChange}
@@ -358,7 +358,7 @@ const RightPanel = memo(() => {
 
               {isImagesDrawerOpen && (
                 <>
-                  <p className="text-xl font-bold">Image Settings</p>
+                  <p className="text-2xl font-black text-retro-navy">Image Settings</p>
                   <div className="mt-5">
                     <div onClick={preventDrawerClose} className="pb-0">
                       <div className="space-y-16">
@@ -546,14 +546,14 @@ const MenuButton = memo(({ icon, tooltip, onClick }) => {
           <Button
             variant="outline"
             size="icon"
-            className="w-12 h-12 rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors"
+            className="w-14 h-14 rounded-2xl hover:bg-retro-cream-dark text-retro-navy transition-colors shadow-[4px_4px_0px_0px_rgba(27,58,87,1)] hover:shadow-[6px_6px_0px_0px_rgba(27,58,87,1)] hover:translate-y-[-2px]"
             onClick={onClick}
           >
             {icon}
           </Button>
         </TooltipTrigger>
-        <TooltipContent side="left" className="bg-background border !border-gray-700 relative left-2">
-          <p className="text-sm font-medium">{tooltip}</p>
+        <TooltipContent side="left" className="bg-retro-navy text-white border-4 border-retro-navy-dark relative left-2 font-bold">
+          <p className="text-sm font-bold">{tooltip}</p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
@@ -568,8 +568,8 @@ const Section = memo(({ title, children }) => {
   };
   return (
     <div className="space-y-4" onClick={preventDrawerClose}>
-      <h4 className="text-lg font-semibold">{title}</h4>
-      <Separator className="my-7 !bg-gray-600 rounded-full" />
+      <h4 className="text-xl font-black text-retro-navy">{title}</h4>
+      <Separator className="my-7 !bg-retro-navy h-1 rounded-full" />
       {children}
     </div>
   );

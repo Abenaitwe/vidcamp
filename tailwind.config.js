@@ -18,7 +18,16 @@ module.exports = {
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
   		},
-  		colors: {}
+  		colors: {
+  			retro: {
+  				cream: '#FFF8E7',
+  				navy: '#1B3A57',
+  				coral: '#FF6B6B',
+  				'navy-dark': '#0F2638',
+  				'coral-light': '#FF8787',
+  				'cream-dark': '#F5E6D3'
+  			}
+  		}
   	}
   },
   plugins: [require("tailwindcss-animate")],
