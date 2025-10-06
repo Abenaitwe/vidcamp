@@ -1,6 +1,6 @@
-# Video Editor
+# VidCamp - Video Editor
 
-A sleek, browser-based video editor made in next JS and shad CN. Stack videos, images, and text with precise timing control and real-time preview and export with FFMPEG.
+A sleek, browser-based video editor with a bold retro design. Stack videos, images, and text with precise timing control and real-time preview. Export your compositions using FFMPEG.
 
 ## Demo Video
 https://github.com/user-attachments/assets/147cec99-d05a-4f89-a89e-02abf7422623
@@ -68,14 +68,74 @@ Precise control with frame markers and playhead
 Convert your composition into a single video file
 ![Export screen](https://live.staticflickr.com/65535/54259750839_e5515289b9_k.jpg)
 
-## Development and todo
-- transitions
-- spliting
-- dragging media files across the TL canvas
+## Setup Instructions
+
+### Frontend Setup
+```bash
+# Install dependencies
+npm install
+
+# Run development server
+npm run dev
+```
+
+### Backend Setup (Required for Export Functionality)
+
+To enable video export, you need to run the backend server:
+
+1. **Clone the backend repository:**
+   ```bash
+   git clone https://github.com/Abenaitwe/vidcamp-backend
+   cd vidcamp-backend
+   ```
+
+2. **Install Python dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Install FFMPEG:**
+   - **MacOS:** `brew install ffmpeg`
+   - **Ubuntu/Debian:** `sudo apt-get install ffmpeg`
+   - **Windows:** Download from [ffmpeg.org](https://ffmpeg.org/download.html)
+
+4. **Run the backend server:**
+   ```bash
+   python main.py
+   # or
+   uvicorn main:app --reload
+   ```
+   
+   The server should start on `http://127.0.0.1:8000`
+
+5. **Configure the backend URL (Optional):**
+   - Copy `.env.local.example` to `.env.local`
+   - Update `NEXT_PUBLIC_BACKEND_URL` if your backend runs on a different port
+
+### Using the Export Feature
+
+1. Create your video composition
+2. Click the Export button in the left panel
+3. Wait for processing (can take 15-30 seconds depending on video length)
+4. Your video will download automatically as `final_video.mp4`
 
 ---
-Note: This is a work in progress. Bug reports and feature requests welcome.
-[Backend repo](https://github.com/Govind783/video-editor-backend)
 
+## Development and Todo
+- [ ] Transitions between clips
+- [ ] Video splitting functionality
+- [ ] Drag and drop media across timeline
+- [ ] Cloud-based export option
+- [ ] More text animation presets
 
-DO star the repo 🌟
+---
+
+## Links
+- [Backend Repository](https://github.com/Abenaitwe/vidcamp-backend)
+- [Report Issues](https://github.com/Abenaitwe/vidcamp/issues)
+
+---
+
+**Note:** This is a work in progress. Bug reports and feature requests are welcome!
+
+⭐ **Don't forget to star the repo!**

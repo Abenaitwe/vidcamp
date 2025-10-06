@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useVideoStore } from "@/State/store";
 import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
+import { getExportUrl } from "@/config/export.config";
 
 const LeftPanel = memo(() => {
   const { toast } = useToast();
@@ -171,15 +172,19 @@ const LeftPanel = memo(() => {
       formData.append("canvas_width", window.innerWidth.toString());
       formData.append("canvas_height", "680".toString());
       setLoadingForConvertingAllVideso(true);
-      const response = await fetch("http://127.0.0.1:8000/process", {
+      const response = await fetch(getExportUrl(), {
         method: "POST",
         body: formData,
       });
 
       if (!response.ok) {
         toast({
-          title: "Someting went wrong in encoding the video",
+          title: "Export failed",
+          description: "Make sure the backend server is running on http://127.0.0.1:8000",
+          variant: "destructive",
         });
+        setLoadingForConvertingAllVideso(false);
+        return;
       }
       setLoadingForConvertingAllVideso(false);
       const finalVideo = await response.blob();
@@ -191,10 +196,15 @@ const LeftPanel = memo(() => {
       URL.revokeObjectURL(url);
     } catch (e) {
       setLoadingForConvertingAllVideso(false);
+      const errorMessage = e.message.includes("fetch") 
+        ? "Cannot connect to backend server. Make sure it's running on http://127.0.0.1:8000"
+        : "Something went wrong while encoding the video";
       toast({
-        title: "Someting went wrong in encoding the video",
+        title: "Export failed",
+        description: errorMessage,
+        variant: "destructive",
       });
-      console.log(e, "err");
+      console.error("Export error:", e);
     }
   };
   return (
@@ -445,8 +455,8 @@ const LeftPanel = memo(() => {
         )}
         {openMenu === "export" && (
           <MenuContent key={3}>
-            <p className="text-xl font-semibold mb-5 mt-2">Export and download</p>
-            <Button disabled={true} className="w-full" onClick={exportAllVideos}>
+            <p className="text-xl font-black text-retro-navy mb-5 mt-2">Export and Download</p>
+            <Button disabled={false} className="w-full" onClick={exportAllVideos}>
               {loadingForConverintAllVideos ? (
                 <div className="flex items-center gap-1">
                   <Loader2 className="animate-spin flex-shrink-0 !w-8 !h-6" />
@@ -457,16 +467,16 @@ const LeftPanel = memo(() => {
               )}
             </Button>
 
-            <p className="text-sm text-gray-300 my-4 w-[250px]">
-              Export temporarily disabled: After a surge in traffic from the demo video, server costs became
-              unsustainable. The backend implementation with FFMPEG is 100% functional, Check out the backend code on{" "}
+            <p className="text-sm text-retro-navy/80 my-4 w-[250px] font-bold">
+              To export videos, you need to run the backend server locally. Download the backend from{" "}
               <Link
-                href="https://github.com/Govind783/nextjs-video-editor"
+                href="https://github.com/Abenaitwe/vidcamp"
                 target="_blank"
-                className="inline-flex items-center hover:text-white"
+                className="inline-flex items-center hover:text-retro-coral underline"
               >
                 GitHub <Github className="ml-1" size={16} />
               </Link>
+              {" "}and follow the setup instructions. The backend uses FFMPEG to process and merge your videos.
             </p>
           </MenuContent>
         )}

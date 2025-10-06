@@ -116,7 +116,7 @@ const VideoUploader = memo(() => {
               Unleash your creativity with our powerful, free, and open-source video editing platform.
             </p>
             <div className="flex flex-wrap justify-center gap-4 pt-4">
-              <a className="w-full max-w-md" href="https://github.com/Govind783/nextjs-video-editor" target="_blank">
+              <a className="w-full max-w-md" href="https://github.com/Abenaitwe/vidcamp" target="_blank">
                 <Button variant="secondary" className="w-full">
                   <Code className="w-5 h-5 mr-2" />
                   View on GitHub
