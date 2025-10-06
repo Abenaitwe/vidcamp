@@ -10,7 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useVideoStore } from "@/State/store";
 import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
-import { getExportUrl } from "@/config/export.config";
+import { useVideoExport } from "@/hooks/useVideoExport";
 
 const LeftPanel = memo(() => {
   const { toast } = useToast();
@@ -27,11 +27,26 @@ const LeftPanel = memo(() => {
   const addTextsOnTL = useVideoStore((state) => state.addTextsOnTL);
   const texts = useVideoStore((state) => state.texts);
   const deleteTextFromTL = useVideoStore((state) => state.deleteTextFromTL);
-  const [loadingForConverintAllVideos, setLoadingForConvertingAllVideso] = useState(false);
+  
+  // Hybrid export system
+  const { 
+    exportVideo, 
+    preloadFFmpeg,
+    isExporting, 
+    exportProgress, 
+    exportMessage,
+    exportMode,
+    MAX_CLIENT_SIZE_MB 
+  } = useVideoExport();
 
   const toggleMenu = (menu) => {
     setOpenMenu(openMenu === menu ? null : menu);
   };
+
+  // Preload FFmpeg on component mount
+  useEffect(() => {
+    preloadFFmpeg();
+  }, [preloadFFmpeg]);
 
   // Close menu on outside click
   useEffect(() => {
@@ -113,98 +128,33 @@ const LeftPanel = memo(() => {
     };
   }, []);
 
-  const exportAllVideos = async () => {
+  // Hybrid export handler
+  const handleExport = async () => {
     try {
-      const formData = new FormData();
-
-      const normalizedVideos = videos
-        .map((video) => ({
-          ...video,
-          startTime: parseFloat(video.startTime),
-          endTime: parseFloat(video.endTime),
-          duration: parseFloat(video.duration),
-        }))
-        .sort((a, b) => a.startTime - b.startTime);
-
-      for (const video of normalizedVideos) {
-        const response = await fetch(video.src);
-        const blobData = await response.blob();
-        const file = new File([blobData], `${video.id}.mp4`, { type: "video/mp4" });
-        formData.append("videos", file);
-      }
-
-      const normalizedImages = images.map((image) => ({
-        ...image,
-        startTime: parseFloat(image.startTime),
-        endTime: parseFloat(image.endTime),
-        x: parseInt(image.x),
-        y: parseInt(image.y),
-        width: parseInt(image.width),
-        height: parseInt(image.height),
-        opacity: parseInt(image.opacity),
-      }));
-
-      for (const image of normalizedImages) {
-        const response = await fetch(image.src);
-        const blobData = await response.blob();
-        const file = new File([blobData], `${image.id}.png`, { type: "image/png" });
-        formData.append("images", file);
-      }
-
-      const normalizedTexts = texts.map((text) => ({
-        ...text,
-        startTime: parseFloat(text.startTime),
-        endTime: parseFloat(text.endTime),
-        x: parseInt(text.x),
-        y: parseInt(text.y),
-        fontSize: parseInt(text.fontSize),
-        opacity: parseInt(text.opacity),
-      }));
-
-      formData.append(
-        "metadata",
-        JSON.stringify({
-          videos: normalizedVideos,
-          images: normalizedImages,
-          texts: normalizedTexts,
-        })
-      );
-      formData.append("canvas_width", window.innerWidth.toString());
-      formData.append("canvas_height", "680".toString());
-      setLoadingForConvertingAllVideso(true);
-      const response = await fetch(getExportUrl(), {
-        method: "POST",
-        body: formData,
+      toast({
+        title: exportMessage || "Starting export...",
+        description: "This may take a moment",
       });
 
-      if (!response.ok) {
-        toast({
-          title: "Export failed",
-          description: "Make sure the backend server is running on http://127.0.0.1:8000",
-          variant: "destructive",
-        });
-        setLoadingForConvertingAllVideso(false);
-        return;
-      }
-      setLoadingForConvertingAllVideso(false);
-      const finalVideo = await response.blob();
-      const url = URL.createObjectURL(finalVideo);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "final_video.mp4";
-      a.click();
-      URL.revokeObjectURL(url);
-    } catch (e) {
-      setLoadingForConvertingAllVideso(false);
-      const errorMessage = e.message.includes("fetch") 
-        ? "Cannot connect to backend server. Make sure it's running on http://127.0.0.1:8000"
-        : "Something went wrong while encoding the video";
+      const result = await exportVideo({
+        videos,
+        images,
+        texts,
+        canvasWidth: window.innerWidth,
+        canvasHeight: 680,
+      });
+
+      toast({
+        title: "Export complete! 🎉",
+        description: `Video exported successfully using ${result.mode === 'client' ? 'local processing' : 'cloud processing'}`,
+      });
+    } catch (error) {
       toast({
         title: "Export failed",
-        description: errorMessage,
+        description: error.message,
         variant: "destructive",
       });
-      console.error("Export error:", e);
+      console.error("Export error:", error);
     }
   };
   return (
@@ -455,28 +405,45 @@ const LeftPanel = memo(() => {
         )}
         {openMenu === "export" && (
           <MenuContent key={3}>
-            <p className="text-xl font-black text-retro-navy mb-5 mt-2">Export and Download</p>
-            <Button disabled={false} className="w-full" onClick={exportAllVideos}>
-              {loadingForConverintAllVideos ? (
-                <div className="flex items-center gap-1">
-                  <Loader2 className="animate-spin flex-shrink-0 !w-8 !h-6" />
-                  can take 15 seconds
+            <p className="text-xl font-black text-retro-navy mb-3 mt-2">Export Video</p>
+            
+            <div className="bg-retro-cream-dark border-4 border-retro-navy rounded-xl p-3 mb-4">
+              <p className="text-xs font-bold text-retro-navy mb-2">📦 Smart Export System</p>
+              <p className="text-xs text-retro-navy/80 font-semibold">
+                • Files ≤ {MAX_CLIENT_SIZE_MB}MB: Instant local processing<br/>
+                • Files &gt; {MAX_CLIENT_SIZE_MB}MB: Cloud processing
+              </p>
+            </div>
+
+            <Button 
+              disabled={isExporting} 
+              className="w-full" 
+              onClick={handleExport}
+            >
+              {isExporting ? (
+                <div className="flex items-center gap-2">
+                  <Loader2 className="animate-spin flex-shrink-0 w-5 h-5" />
+                  <div className="flex flex-col items-start">
+                    <span className="text-xs">{exportMessage}</span>
+                    <span className="text-xs opacity-80">{exportProgress}%</span>
+                  </div>
                 </div>
               ) : (
-                "Export"
+                <>
+                  <Download className="w-5 h-5 mr-2" />
+                  Export Video
+                </>
               )}
             </Button>
 
-            <p className="text-sm text-retro-navy/80 my-4 w-[250px] font-bold">
-              To export videos, you need to run the backend server locally. Download the backend from{" "}
-              <Link
-                href="https://github.com/Abenaitwe/vidcamp"
-                target="_blank"
-                className="inline-flex items-center hover:text-retro-coral underline"
-              >
-                GitHub <Github className="ml-1" size={16} />
-              </Link>
-              {" "}and follow the setup instructions. The backend uses FFMPEG to process and merge your videos.
+            {exportMode && (
+              <p className="text-xs text-retro-navy/70 mt-3 font-semibold text-center">
+                {exportMode === 'client' ? '⚡ Processing locally' : '☁️ Processing on cloud'}
+              </p>
+            )}
+
+            <p className="text-xs text-retro-navy/60 my-3 font-bold text-center">
+              No setup required! Export works instantly in your browser.
             </p>
           </MenuContent>
         )}

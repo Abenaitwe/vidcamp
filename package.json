@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ffmpeg/ffmpeg": "^0.12.15",
+    "@ffmpeg/util": "^0.12.2",
     "@interactify/infinite-viewer": "^0.0.2",
     "@interactify/moveable": "^0.1.0",
     "@interactify/selection": "^0.1.0",
@@ -28,6 +30,7 @@
     "@radix-ui/react-tooltip": "^1.1.6",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "formidable": "^3.5.4",
     "lucide-react": "^0.469.0",
     "next": "14.1.0",
     "next-themes": "^0.4.4",
